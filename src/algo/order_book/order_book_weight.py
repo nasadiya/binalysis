@@ -6,7 +6,9 @@ The script also uses a visualisation tool
 
 import numpy as np
 import pandas as pd
+from datetime import datetime, timedelta
 from src.asset_object import AssetObject
+from src.time_space import EPOCH
 
 
 def order_book_data(asst_obj, time=None, size=100):
@@ -19,14 +21,20 @@ def order_book_data(asst_obj, time=None, size=100):
     :param size: number of rows of the data
     :return: returns a pandas data frame with the data
     """
+    realtime = lambda x: (EPOCH +
+                          timedelta(milliseconds=x)).\
+        strftime("%m/%d/%Y, %H:%M:%S")
     columns = len(asst_obj.weighted_indicator())
     # enter time as upper boundary, this will override size
     if time is not None:
         origin = asst_obj.server_time()
         placeholder = np.zeros(shape=(1, columns))
         while origin <= time:
+            print(realtime(origin), realtime(time))
+            new_data = np.array(asst_obj.weighted_indicator())
             placeholder = np.vstack((placeholder,
-                                     np.array(asst_obj.weighted_indicator())))
+                                     new_data))
+            origin = asst_obj.server_time()
         placeholder = placeholder[1:, ]
     # use the size provided if time is not provided
     else:

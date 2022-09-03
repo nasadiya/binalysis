@@ -3,8 +3,6 @@ The package is designed to elicit order book information from the trading
 platform. The present exercise is to establish a relationship between the
 order book metrics and the drift in general.
 """
-
-import sys
 import json
 from datetime import datetime
 from binance import Client
@@ -16,9 +14,9 @@ client = Client(json.load(open("./keys.json"))["api_key"])
 
 order_book_obj = OrderBookWeight(client, "BTCUSDT")
 
-present = TimeType(datetime.now())
+present = TimeType(order_book_obj.server_time(), time_type='milliseconds')
 # get a days worth of data
-present.add_to(1, 'days')
+present.add_to(20, 'seconds')
 time_milli = present.to_millis()
 
 
