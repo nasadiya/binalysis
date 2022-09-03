@@ -5,16 +5,37 @@ The script also uses a visualisation tool
 """
 
 import numpy as np
-import pylab as plt
+import pandas as pd
 from src.asset_object import AssetObject
 
 
-def order_book_data(asst_obj, size=100):
+def order_book_data(asst_obj, time=None, size=100):
+    """
+    iteratively fetches tick data from the server and stores it as a data
+    frame. Given an upper limit of time, it saves all data accumulated
+    within that time. Otherwise, it stores a specific number of rows.
+    :param asst_obj: asset object (order book object)
+    :param time: upper limit of time
+    :param size: number of rows of the data
+    :return: returns a pandas data frame with the data
+    """
     columns = len(asst_obj.weighted_indicator())
-    placeholder = np.zeros(shape=(size, columns))
-    for counter in range(size):
-        placeholder[counter, :] = asst_obj.weighted_indicator()
-    return placeholder
+    # enter time as upper boundary, this will override size
+    if time is not None:
+        origin = asst_obj.server_time()
+        placeholder = np.zeros(shape=(1, columns))
+        while origin <= time:
+            placeholder = np.vstack((placeholder,
+                                     np.array(asst_obj.weighted_indicator())))
+        placeholder = placeholder[1:, ]
+    # use the size provided if time is not provided
+    else:
+        placeholder = np.zeros(shape=(size, columns))
+        for counter in range(size):
+            placeholder[counter, :] = asst_obj.weighted_indicator()
+    # convert to data frame
+    dat = pd.DataFrame(data=placeholder, columns=asst_obj.columns)
+    return dat
 
 
 def weighted_sum(list_of_lists):
@@ -48,28 +69,3 @@ class OrderBookWeight(AssetObject):
         return (time_s + time_f) * 0.5, price, weighted_sum(
             order_book['bids'] +
             order_book['asks'])
-
-
-def order_book_visualiser(asst_obj):
-
-    n = 100
-    n_temp = 0
-    data_store = np.zeros(shape=(n, 3))
-    plt.ion()
-    graph1 = plt.plot(data_store[:, 0]/1e9, data_store[:, 1])[0]
-    graph2 = plt.plot(data_store[:, 0]/1e9, data_store[:, 2])[0]
-    plt.legend(['price', 'weighted_order'])
-
-    while True:
-        n_temp += 1
-        print('\nData Counter : {} \n'.format(n_temp))
-        data_store = np.vstack((data_store[1:, ],
-                                asst_obj.weighted_indicator()))
-        graph1.set_ydata(data_store[:, 1])
-        graph2.set_ydata(data_store[:, 2])
-        graph1.set_xdata(data_store[:, 0] / 1e9)
-        graph2.set_xdata(data_store[:, 0] / 1e9)
-        plt.ylim([data_store[:, 1:].min(), data_store[:, 1:].max()])
-        plt.xlim([data_store[:, 0].min()/1e9, data_store[:, 0].max()/1e9])
-        plt.draw()
-        plt.pause(0.01)

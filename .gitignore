@@ -132,3 +132,9 @@ dmypy.json
 # keys
 keys.json
 
+# csv files
+*.csv
+
+# xlsx files
+*.xlsx
+

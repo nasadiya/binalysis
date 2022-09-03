@@ -4,7 +4,7 @@ Primary script to test the order_book_weight
 
 import pytest
 
-from src.order_book_weight import weighted_sum
+from src.algo.order_book.order_book_weight import weighted_sum
 
 
 # unit tests for order_book_weight.py
