@@ -1,4 +1,3 @@
-
 """
 function to compute the weighted sum of order book and compare with the price
 The script also uses a visualisation tool
@@ -6,9 +5,8 @@ The script also uses a visualisation tool
 
 import numpy as np
 import pandas as pd
-from datetime import datetime, timedelta
 from src.asset_object import AssetObject
-from src.time_space import EPOCH
+from src.time_space import realtime
 
 
 def order_book_data(asst_obj, time=None, size=100):
@@ -21,9 +19,6 @@ def order_book_data(asst_obj, time=None, size=100):
     :param size: number of rows of the data
     :return: returns a pandas data frame with the data
     """
-    realtime = lambda x: (EPOCH +
-                          timedelta(milliseconds=x)).\
-        strftime("%m/%d/%Y, %H:%M:%S")
     columns = len(asst_obj.weighted_indicator())
     # enter time as upper boundary, this will override size
     if time is not None:
@@ -60,20 +55,21 @@ class OrderBookWeight(AssetObject):
     """
     To perform hypothesis tests on order book and price
     """
+
     def __init__(self, client_object, asset_moniker):
         super().__init__(client_object, asset_moniker)
-        self.columns = ["average_time", "average_price", "weighted_price"]
+        self.columns = ["time0", "time1", "ticker_price", "weighted_price"]
 
-    def weighted_indicator(self):
+    def weighted_indicator(self, date_time=False):
         """
         :return: computes the instantaneous weighted price based on order
         book and also returns the average time and traded price.
         """
-        time_s = self.server_time()
+        time0 = self.server_time()
         order_book = self.order_book()
-        price = self.averager_price()
-        time_f = self.server_time()
+        price = self.ticker_price()
+        time1 = self.server_time()
 
-        return (time_s + time_f) * 0.5, price, weighted_sum(
-            order_book['bids'] +
-            order_book['asks'])
+        return realtime(time0, date_time=True), realtime(time1,
+                                                         date_time=True),  \
+               price, weighted_sum(order_book['bids'] + order_book['asks'])

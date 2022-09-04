@@ -5,19 +5,20 @@ order book metrics and the drift in general.
 """
 import json
 from datetime import datetime
-from binance import Client
+from binance.spot import Spot
 from src.time_space import TimeType
 from src.algo.order_book.order_book_weight import OrderBookWeight, \
     order_book_data
 
-client = Client(json.load(open("./keys.json"))["api_key"])
+client = Spot(json.load(open("./keys.json"))["api_key"])
 
 order_book_obj = OrderBookWeight(client, "BTCUSDT")
 
 present = TimeType(order_book_obj.server_time(), time_type='milliseconds')
 # get a days worth of data
-present.add_to(20, 'seconds')
+present.add_to(3, 'seconds')
 time_milli = present.to_millis()
+# order_book_data(order_book_obj, time=time_milli)
 
 
 if __name__ == "__main__":

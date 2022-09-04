@@ -15,12 +15,12 @@ class AssetObject:
         self.asset_moniker = asset_moniker
 
     def server_time(self, server_time_moniker='serverTime'):
-        return self.client.get_server_time()[server_time_moniker]
+        return self.client.time()[server_time_moniker]
 
     def order_book(self):
-        return self.client.get_order_book(symbol=self.asset_moniker)
+        return self.client.depth(symbol=self.asset_moniker)
 
-    def averager_price(self, price_moniker='price'):
-        return float(self.client.get_avg_price(symbol=self.asset_moniker)[
+    def ticker_price(self, price_moniker='price'):
+        return float(self.client.ticker_price(symbol=self.asset_moniker)[
                          price_moniker])
 1

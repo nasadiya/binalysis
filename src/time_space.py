@@ -7,6 +7,14 @@ from datetime import datetime, timedelta
 EPOCH = datetime(1970, 1, 1)
 
 
+def realtime(tims_in_ms, date_time=False):
+    if not date_time:
+        return (EPOCH + timedelta(milliseconds=tims_in_ms)). \
+            strftime("%m/%d/%Y, %H:%M:%S")
+    else:
+        return EPOCH + timedelta(milliseconds=tims_in_ms)
+
+
 class TimeType:
     """
     to create a time object which can then be converted to any desired format
