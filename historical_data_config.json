@@ -1,0 +1,23 @@
+{
+  "1m1M": {
+    "BTCUSDT": "./../../Codes/binance-public-data/python/data/spot/monthly/klines/BTCUSDT/1m/",
+    "ETHUSDT": "./../../Codes/binance-public-data/python/data/spot/monthly/klines/ETHUSDT/1m/"
+  },
+  "COLUMNS_KLINES":
+  ["Open time",
+    "Open",
+    "High",
+    "Low",
+    "Close",
+    "Volume",
+    "Close time",
+    "Quote asset volume",
+    "Number of trades",
+    "Taker buy base asset volume",
+    "Taker buy quote asset volume",
+    "Ignore"],
+
+  "TIME_COLUMNS":
+  ["Open time",
+   "Close time"]
+}

@@ -24,8 +24,8 @@ def order_book_data(asst_obj, time=None, size=100):
     if time is not None:
         origin = asst_obj.server_time()
         placeholder = np.zeros(shape=(1, columns))
+        print(realtime(origin), realtime(time))
         while origin <= time:
-            print(realtime(origin), realtime(time))
             new_data = np.array(asst_obj.weighted_indicator())
             placeholder = np.vstack((placeholder,
                                      new_data))

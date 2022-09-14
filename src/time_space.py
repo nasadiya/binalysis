@@ -8,11 +8,11 @@ EPOCH = datetime(1970, 1, 1)
 
 
 def realtime(tims_in_ms, date_time=False):
+    datetime_object = EPOCH + timedelta(milliseconds=tims_in_ms)
     if not date_time:
-        return (EPOCH + timedelta(milliseconds=tims_in_ms)). \
-            strftime("%m/%d/%Y, %H:%M:%S")
+        return datetime_object.strftime("%d/%m/%Y, %H:%M:%S")
     else:
-        return EPOCH + timedelta(milliseconds=tims_in_ms)
+        return datetime_object
 
 
 class TimeType:
