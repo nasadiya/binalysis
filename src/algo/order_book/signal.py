@@ -1,6 +1,17 @@
 """
 signal generator for the order book algo
 This reads the incoming data to calibrate the signals and generate trades.
+
+1. It assumes that the program will take the strategy in the following
+    format :
+    [condition : function of input flows from t0 -> t1 where t1 is
+    present or present minus some constant, [t0, t1] is thus a fixed or a
+    variable window.]
+
+    [action : Buy/Sell/Hold]
+
+    [price : pre-specified or a function]
+
 """
 
 import numpy as np
@@ -55,3 +66,4 @@ class SignalGen:
         # generate signal based on self.data; consider moving data part to
         # another method.
         pass
+
