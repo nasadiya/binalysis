@@ -4,6 +4,8 @@ Program to check the feed and execute the order
 """
 import numpy as np
 
+MAX_UNFILLED = 0.00001
+
 
 def order_filler(stream: list, price: float, fill: list, action: str):
     """
@@ -36,7 +38,7 @@ def order_filler(stream: list, price: float, fill: list, action: str):
 
     # if there is more to sell, more orders to choose from, price is favorable
     def regularity(siz, prc, dep, act, dep_siz, cnt):
-        if siz > 0.0 and dep_siz > (cnt + 1):
+        if siz > MAX_UNFILLED and dep_siz > (cnt + 1):
             if act == 'buy':
                 if prc >= dep:
                     return True
@@ -57,15 +59,27 @@ def order_filler(stream: list, price: float, fill: list, action: str):
     return fill, price
 
 
-def initiate_order(live_stream, price: float, fill: list, action: str):
+def initiate_order(live_stream, price: float, fill: list, action_stream):
     """
     takes order_filler and a live stream object and runs it till the order is
     filled. this should ideally be able to be stopped based on another
     trigger which asks the order to cease at user's will
-    :param live_stream:
-    :param price:
-    :param fill:
-    :param action:
-    :return:
+    :param live_stream: object which can be pinged to update the next tick
+    of the data.
+    :param price: price at (or better) at which the trade is desired.
+    :param fill: a list of a numpy N x 2 array and float. The first list
+    consists of [price, size] of successful fills. The seconds number is
+    unfilled order
+    :param action_stream: a stream which either results in 'buy','sell' or
+    'hold'
+    :return: same as fill above
     """
-    pass
+    while action_stream.status() != 'hold':
+        # if there is any order to be filled execute else break
+        if fill[1] >= MAX_UNFILLED:
+            fill, _ = order_filler(live_stream.depth(), price, fill,
+                                   action_stream.status())
+        else:
+            break
+
+    return fill
