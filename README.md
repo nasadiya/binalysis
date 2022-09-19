@@ -1,5 +1,5 @@
 # binalysis
-Trade analysis based on Binance API
+Trade Analysis based on Binance API
 
 # Scope 
 Present scope is limited to testing hypothesis based on tick data. 
