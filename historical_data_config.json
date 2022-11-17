@@ -1,7 +1,6 @@
 {
   "1m1M": {
-    "BTCUSDT": "./../binance-public-data/python/data/spot/monthly/klines/BTCUSDT/1m/",
-    "ETHUSDT": "./../binance-public-data/python/data/spot/monthly/klines/ETHUSDT/1m/"
+    "BTCUSDT": "./../binance-public-data/python/data/spot/monthly/klines/BTCUSDT/1m/"
   },
   "COLUMNS_KLINES":
   ["Open time",
