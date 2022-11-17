@@ -72,4 +72,4 @@ class OrderBookWeight(AssetObject):
 
         return realtime(time0, date_time=True), realtime(time1,
                                                          date_time=True),  \
-               price, weighted_sum(order_book['bids'] + order_book['asks'])
+            price, weighted_sum(order_book['bids'] + order_book['asks'])
